@@ -7,6 +7,7 @@ import MapKit
 
 class ViewController: UIViewController {
 
+    var notification = false
 
     @IBOutlet var mapView: MKMapView!
     override func viewDidLoad() {
@@ -16,7 +17,27 @@ class ViewController: UIViewController {
         getDirections()
         getDirections2()
         
-
+        
+        
+        
+        let button = UIButton(frame: CGRect(x: 140,
+                                                    y: 660,
+                                                    width: 200,
+                                                    height: 60))
+                button.setTitle("Notification",
+                                for: .normal)
+                button.setTitleColor(.systemBlue,
+                                     for: .normal)
+                
+                button.addTarget(self,
+                                 action: #selector(buttonAction),
+                                 for: .touchUpInside)
+                
+                self.view.addSubview(button)
+       
+        
+        
+        
         let annotation1 = MKPointAnnotation()
         annotation1.coordinate = CLLocationCoordinate2D(latitude: 40.4432, longitude: -79.9428)
         annotation1.title = "Ice"
@@ -43,6 +64,39 @@ class ViewController: UIViewController {
 
         
 
+    }
+    
+    @objc
+        func buttonAction() {
+            if (notification == false) {
+                self.showToast(message: "Notification Mode On", font: .systemFont(ofSize: 12.0))
+                self.notification = !notification
+
+            } else {
+                self.showToast(message: "Notification Mode Off", font: .systemFont(ofSize: 12.0))
+                self.notification = !notification
+
+            }
+            print("Notification Button pressed")
+        }
+    
+    func showToast(message : String, font: UIFont) {
+
+        let toastLabel = UILabel(frame: CGRect(x: self.view.frame.size.width/2 - 90, y: self.view.frame.size.height - 400, width: 200, height: 60))
+        toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        toastLabel.textColor = UIColor.white
+        toastLabel.font = font
+        toastLabel.textAlignment = .center;
+        toastLabel.text = message
+        toastLabel.alpha = 1.0
+        toastLabel.layer.cornerRadius = 10;
+        toastLabel.clipsToBounds  =  true
+        self.view.addSubview(toastLabel)
+        UIView.animate(withDuration: 6.0, delay: 0.1, options: .curveEaseOut, animations: {
+             toastLabel.alpha = 0.0
+        }, completion: {(isCompleted) in
+            toastLabel.removeFromSuperview()
+        })
     }
     
     func getDirections() {
